@@ -1,7 +1,7 @@
 {
   "canisters": {
     "nft_backend": {
-      "build": "python -m kybra nft_backend src/nft_backend/src/main.py",
+      "build": "python -m basilisk nft_backend src/nft_backend/src/main.py",
       "candid": "src/nft_backend/nft_backend.did",
       "declarations": {
         "node_compatibility": true
@@ -9,14 +9,14 @@
       "gzip": true,
       "tech_stack": {
         "cdk": {
-          "kybra": {}
+          "basilisk": {}
         },
         "language": {
           "python": {}
         }
       },
       "type": "custom",
-      "wasm": ".kybra/nft_backend/nft_backend.wasm",
+      "wasm": ".basilisk/nft_backend/nft_backend.wasm",
       "metadata": [
         {
           "name": "candid:service"

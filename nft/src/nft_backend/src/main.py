@@ -8,7 +8,7 @@ ICRC-7: https://github.com/dfinity/ICRC/blob/main/ICRCs/ICRC-7/ICRC-7.md
 ICRC-37: https://github.com/dfinity/ICRC/blob/main/ICRCs/ICRC-37/ICRC-37.md
 """
 
-from kybra import (
+from basilisk import (
     Alias,
     Async,
     CallResult,
@@ -31,8 +31,8 @@ from kybra import (
     void,
     ic,
 )
-from kybra_simple_db import Database, Entity, Integer, String
-from kybra_simple_logging import get_logger
+from ic_python_db import Database, Entity, Integer, String
+from ic_python_logging import get_logger
 
 # Initialize stable storage for the database
 storage = StableBTreeMap[str, str](

@@ -1,6 +1,8 @@
-# kybra-simple-token
+# ic-python-token
 
-Token implementations for the Internet Computer using Kybra (Python CDK).
+Token implementations for the Internet Computer using [Basilisk](https://github.com/smart-social-contracts/basilisk) (Python CDK).
+
+Forked from [kybra-simple-token](https://github.com/smart-social-contracts/kybra-simple-token) and migrated from Kybra to Basilisk.
 
 ## 🚀 Live Demos
 
@@ -22,7 +24,7 @@ Token implementations for the Internet Computer using Kybra (Python CDK).
 
 ## ICRC-1 Fungible Token (`token/`)
 
-An ICRC-1 token implementation using `kybra`, `kybra-simple-db`, and `kybra_simple_logging`.
+An ICRC-1 token implementation using `basilisk`, `ic_python_db`, and `ic_python_logging`.
 
 ### Canister IDs (Staging)
 
@@ -34,7 +36,7 @@ An ICRC-1 token implementation using `kybra`, `kybra-simple-db`, and `kybra_simp
 ### Features
 
 - **ICRC-1 Compliant** - Full ICRC-1 token standard implementation
-- **Kybra Python Backend** - Built with Kybra CDK for the Internet Computer
+- **Basilisk Python Backend** - Built with Basilisk CDK for the Internet Computer
 - **SvelteKit Frontend** - Modern web interface with:
   - Token information display
   - Token distribution pie chart visualization
@@ -205,17 +207,17 @@ python3 tests/backend/test_token.py
 ## Project Structure
 
 ```
-kybra-simple-token/
+ic-python-token/
 ├── .github/workflows/       # CI/CD workflows
 ├── token/                   # ICRC-1 Fungible Token
 │   ├── src/
-│   │   ├── token_backend/   # Kybra Python backend
+│   │   ├── token_backend/   # Basilisk Python backend
 │   │   └── token_frontend/  # SvelteKit frontend
 │   ├── tests/
 │   └── dfx.json
 ├── nft/                     # ICRC-7/ICRC-37 NFT
 │   ├── src/
-│   │   └── nft_backend/     # Kybra Python backend
+│   │   └── nft_backend/     # Basilisk Python backend
 │   ├── tests/
 │   └── dfx.json
 └── README.md

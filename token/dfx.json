@@ -1,7 +1,7 @@
 {
   "canisters": {
     "token_backend": {
-      "build": "python -m kybra token_backend src/token_backend/src/main.py",
+      "build": "python -m basilisk token_backend src/token_backend/src/main.py",
       "candid": "src/token_backend/token_backend.did",
       "declarations": {
         "node_compatibility": true
@@ -9,14 +9,14 @@
       "gzip": true,
       "tech_stack": {
         "cdk": {
-          "kybra": {}
+          "basilisk": {}
         },
         "language": {
           "python": {}
         }
       },
       "type": "custom",
-      "wasm": ".kybra/token_backend/token_backend.wasm",
+      "wasm": ".basilisk/token_backend/token_backend.wasm",
       "metadata": [
         {
           "name": "candid:service"

@@ -1,4 +1,4 @@
-from kybra import (
+from basilisk import (
     Opt,
     Principal,
     Record,
@@ -16,8 +16,8 @@ from kybra import (
     update,
     void,
 )
-from kybra_simple_db import Database, Entity, Integer, String
-from kybra_simple_logging import get_logger
+from ic_python_db import Database, Entity, Integer, String
+from ic_python_logging import get_logger
 
 # Initialize stable storage for the database
 storage = StableBTreeMap[str, str](
@@ -279,30 +279,38 @@ def init_(args: InitArgs) -> void:
     OwnerHelper.set_owner(deployer)
     TokenHelper.set_balance(deployer, args["total_supply"])
     TokenHelper.set_total_supply(args["total_supply"])
+    TokenConfig(key="name", value=args["name"])
+    TokenConfig(key="symbol", value=args["symbol"])
+    TokenConfig(key="decimals", value=str(args["decimals"]))
+    TokenConfig(key="fee", value=str(args["fee"]))
     if args.get("test"):
         TokenConfig(key="test", value="true")
         logger.info("Test mode enabled - public minting allowed")
-    logger.info(f"Token initialized. Supply: {args['total_supply']} to {deployer}")
+    logger.info(f"Token '{args['name']}' initialized. Supply: {args['total_supply']} to {deployer}")
 
 
 @query
 def icrc1_name() -> text:
-    return TOKEN_NAME
+    config = TokenConfig["name"]
+    return config.value if config and config.value else TOKEN_NAME
 
 
 @query
 def icrc1_symbol() -> text:
-    return TOKEN_SYMBOL
+    config = TokenConfig["symbol"]
+    return config.value if config and config.value else TOKEN_SYMBOL
 
 
 @query
 def icrc1_decimals() -> nat8:
-    return TOKEN_DECIMALS
+    config = TokenConfig["decimals"]
+    return int(config.value) if config and config.value else TOKEN_DECIMALS
 
 
 @query
 def icrc1_fee() -> nat:
-    return TOKEN_FEE
+    config = TokenConfig["fee"]
+    return int(config.value) if config and config.value else TOKEN_FEE
 
 
 @query
@@ -324,10 +332,10 @@ def icrc1_balance_of(account: Account) -> nat:
 @query
 def icrc1_metadata() -> Vec[MetadataEntry]:
     return [
-        ("icrc1:name", TOKEN_NAME),
-        ("icrc1:symbol", TOKEN_SYMBOL),
-        ("icrc1:decimals", str(TOKEN_DECIMALS)),
-        ("icrc1:fee", str(TOKEN_FEE)),
+        ("icrc1:name", icrc1_name()),
+        ("icrc1:symbol", icrc1_symbol()),
+        ("icrc1:decimals", str(icrc1_decimals())),
+        ("icrc1:fee", str(icrc1_fee())),
     ]
 
 
