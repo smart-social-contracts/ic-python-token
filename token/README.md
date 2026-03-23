@@ -1,13 +1,13 @@
 # Simple Token - ICRC-1
 
-A simple ICRC-1 token implementation using Kybra (Python CDK for the Internet Computer).
+A simple ICRC-1 token implementation using Basilisk (Python CDK for the Internet Computer).
 
 ## Features
 
 - **ICRC-1 Standard Compliant**: Implements core ICRC-1 token standard methods
-- **Kybra Backend**: Written in Python using Kybra CDK
+- **Basilisk Backend**: Written in Python using Basilisk CDK
 - **Simple Frontend**: Displays token name and total supply
-- **Persistent Storage**: Uses `kybra-simple-db` for balance storage
+- **Persistent Storage**: Uses `ic-python-db` for balance storage
 
 ## Token Configuration
 
@@ -77,7 +77,7 @@ token/
 ├── dfx.json                 # DFX configuration
 ├── requirements.txt         # Python dependencies
 └── src/
-    ├── token_backend/       # Kybra backend
+    ├── token_backend/       # Basilisk backend
     │   ├── src/main.py      # ICRC-1 implementation
     │   └── token_backend.did # Candid interface
     └── token_frontend/      # SvelteKit frontend

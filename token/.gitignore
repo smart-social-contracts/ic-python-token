@@ -10,8 +10,8 @@
 # dfx temporary files
 .dfx/
 
-# kybra build output
-.kybra/
+# basilisk build output
+.basilisk/
 
 # generated files
 **/declarations/

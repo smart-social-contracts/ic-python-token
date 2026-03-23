@@ -2,7 +2,7 @@
 ICRC-7 / ICRC-37 NFT Canister Implementation
 
 This module implements the ICRC-7 (NFT) and ICRC-37 (Approve & Transfer From) standards
-for the Internet Computer using Kybra (Python CDK).
+for the Internet Computer using Basilisk (Python CDK).
 
 ICRC-7: https://github.com/dfinity/ICRC/blob/main/ICRCs/ICRC-7/ICRC-7.md
 ICRC-37: https://github.com/dfinity/ICRC/blob/main/ICRCs/ICRC-37/ICRC-37.md

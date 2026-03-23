@@ -30,7 +30,7 @@ dfx canister create token_backend
 dfx build token_backend
 
 # Copy backend artifacts
-cp .kybra/token_backend/token_backend.wasm "$OUTPUT_DIR/"
+cp .basilisk/token_backend/token_backend.wasm "$OUTPUT_DIR/"
 cp src/token_backend/token_backend.did "$OUTPUT_DIR/"
 gzip -k "$OUTPUT_DIR/token_backend.wasm"
 

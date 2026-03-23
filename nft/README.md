@@ -1,6 +1,6 @@
 # ICRC-7/ICRC-37 NFT Canister
 
-A Kybra (Python) implementation of the ICRC-7 (NFT) and ICRC-37 (Approve & Transfer From) standards for the Internet Computer.
+A Basilisk (Python) implementation of the ICRC-7 (NFT) and ICRC-37 (Approve & Transfer From) standards for the Internet Computer.
 
 ## Standards Implemented
 
@@ -34,7 +34,7 @@ A Kybra (Python) implementation of the ICRC-7 (NFT) and ICRC-37 (Approve & Trans
 
 - [DFX](https://internetcomputer.org/docs/current/developer-docs/setup/install) >= 0.15.0
 - Python 3.10+
-- [Kybra](https://demergent-labs.github.io/kybra/) 0.7.x
+- [Basilisk](https://github.com/smart-social-contracts/basilisk) 0.10.x
 
 ### Local Development
 

@@ -30,7 +30,7 @@ dfx canister create nft_backend
 dfx build nft_backend
 
 # Copy backend artifacts
-cp .kybra/nft_backend/nft_backend.wasm "$OUTPUT_DIR/"
+cp .basilisk/nft_backend/nft_backend.wasm "$OUTPUT_DIR/"
 cp src/nft_backend/nft_backend.did "$OUTPUT_DIR/"
 gzip -k "$OUTPUT_DIR/nft_backend.wasm"
 

@@ -2,7 +2,7 @@
 
 Token implementations for the Internet Computer using [Basilisk](https://github.com/smart-social-contracts/basilisk) (Python CDK).
 
-Forked from [kybra-simple-token](https://github.com/smart-social-contracts/kybra-simple-token) and migrated from Kybra to Basilisk.
+Forked from [kybra-simple-token](https://github.com/smart-social-contracts/kybra-simple-token) and migrated to Basilisk.
 
 ## 🚀 Live Demos
 

@@ -82,7 +82,7 @@ jobs:
           tag_name: ${{ steps.version.outputs.VERSION }}
           name: Release ${{ steps.version.outputs.VERSION }}
           body: |
-            ## Kybra Simple Token Release ${{ steps.version.outputs.VERSION }}
+            ## IC Python Token Release ${{ steps.version.outputs.VERSION }}
             
             ### Modules
             - **Token (ICRC-1)**: Fungible token implementation
@@ -90,11 +90,11 @@ jobs:
             
             ### Artifacts
             #### Token (ICRC-1)
-            - `token_backend.wasm` - Token backend canister (Kybra Python)
+            - `token_backend.wasm` - Token backend canister (Basilisk Python)
             - `token_frontend.wasm` - Token frontend canister (SvelteKit)
             
             #### NFT (ICRC-7/ICRC-37)
-            - `nft_backend.wasm` - NFT backend canister (Kybra Python)
+            - `nft_backend.wasm` - NFT backend canister (Basilisk Python)
             - `nft_frontend.wasm` - NFT frontend canister (SvelteKit)
           files: |
             artifacts/token_backend.wasm.gz

@@ -4,7 +4,7 @@
   const version = __APP_VERSION__ || "dev";
   const commitHash = __COMMIT_HASH__ || "local";
   const buildTime = __BUILD_TIME__ || new Date().toISOString();
-  const repoUrl = "https://github.com/smart-social-contracts/kybra-simple-token";
+  const repoUrl = "https://github.com/smart-social-contracts/ic-python-token";
 </script>
 
 <div class="app-container">

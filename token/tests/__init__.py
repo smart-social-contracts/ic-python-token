@@ -1,1 +1,1 @@
-# Tests for kybra-simple-token
+# Tests for ic-python-token

@@ -18,7 +18,7 @@ fi
 if [ "$CLEAN" = true ]; then
     echo "Starting dfx with clean state..."
     dfx stop 2>/dev/null || true
-    rm -rf .dfx/local .kybra
+    rm -rf .dfx/local .basilisk
     dfx start --background --clean
 elif lsof -ti:8000 >/dev/null 2>&1; then
     echo "dfx already running on port 8000"

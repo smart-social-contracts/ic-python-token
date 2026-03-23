@@ -15,8 +15,8 @@ env/
 *.egg-info/
 *.egg
 
-# Kybra
-.kybra/
+# Basilisk
+.basilisk/
 
 # DFX
 .dfx/

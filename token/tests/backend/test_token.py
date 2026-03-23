@@ -60,39 +60,39 @@ class MockVariant:
 
 
 # Create mock modules BEFORE any imports
-mock_kybra = ModuleType("kybra")
+mock_basilisk = ModuleType("basilisk")
 mock_ic = MagicMock()
 mock_ic.time.return_value = int(time.time() * 1_000_000_000)
 mock_ic.caller.return_value = MagicMock(to_str=lambda: "aaaaa-aa")
 mock_ic.id.return_value = MagicMock(to_str=lambda: "bbbbb-bb")
 
-mock_kybra.ic = mock_ic
-mock_kybra.Opt = MockOpt
-mock_kybra.Principal = MagicMock
-mock_kybra.Record = MockRecord
-mock_kybra.StableBTreeMap = MockStableBTreeMap
-mock_kybra.Tuple = MockTuple
-mock_kybra.Variant = MockVariant
-mock_kybra.Vec = MockVec
-mock_kybra.blob = bytes
-mock_kybra.init = lambda f: f
-mock_kybra.nat = int
-mock_kybra.nat8 = int
-mock_kybra.query = lambda f: f
-mock_kybra.text = str
-mock_kybra.update = lambda f: f
-mock_kybra.void = type(None)
+mock_basilisk.ic = mock_ic
+mock_basilisk.Opt = MockOpt
+mock_basilisk.Principal = MagicMock
+mock_basilisk.Record = MockRecord
+mock_basilisk.StableBTreeMap = MockStableBTreeMap
+mock_basilisk.Tuple = MockTuple
+mock_basilisk.Variant = MockVariant
+mock_basilisk.Vec = MockVec
+mock_basilisk.blob = bytes
+mock_basilisk.init = lambda f: f
+mock_basilisk.nat = int
+mock_basilisk.nat8 = int
+mock_basilisk.query = lambda f: f
+mock_basilisk.text = str
+mock_basilisk.update = lambda f: f
+mock_basilisk.void = type(None)
 
-sys.modules["kybra"] = mock_kybra
+sys.modules["basilisk"] = mock_basilisk
 
-# Mock kybra_simple_logging
-mock_logging = ModuleType("kybra_simple_logging")
+# Mock ic_python_logging
+mock_logging = ModuleType("ic_python_logging")
 mock_logger = MagicMock()
 mock_logging.get_logger = lambda name: mock_logger
-sys.modules["kybra_simple_logging"] = mock_logging
+sys.modules["ic_python_logging"] = mock_logging
 
 
-# Mock kybra_simple_db
+# Mock ic_python_db
 class MockStorage:
     """Mock storage for testing without requiring a real canister environment"""
 
@@ -192,14 +192,14 @@ class MockDatabase:
         pass
 
 
-mock_db = ModuleType("kybra_simple_db")
+mock_db = ModuleType("ic_python_db")
 mock_db.Database = MockDatabase
 mock_db.Entity = MockEntity
 mock_db.Integer = int
 mock_db.String = str
-sys.modules["kybra_simple_db"] = mock_db
+sys.modules["ic_python_db"] = mock_db
 
-# Add paths to match Kybra's import resolution
+# Add paths to match Basilisk's import resolution
 sys.path.insert(
     0, os.path.join(os.path.dirname(__file__), "../../src/token_backend/src")
 )
