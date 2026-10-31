@@ -11,6 +11,8 @@ from basilisk import (
     init,
     nat,
     nat8,
+    nat64,
+    null,
     query,
     text,
     update,
@@ -81,10 +83,47 @@ class TransferArgs(Record):
     created_at_time: Opt[nat]
 
 
-class TransferResult(Record):
-    success: bool
-    block_index: Opt[nat]
-    error: Opt[text]
+class BadFeeError(Record):
+    expected_fee: nat
+
+
+class BadBurnError(Record):
+    min_burn_amount: nat
+
+
+class InsufficientFundsError(Record):
+    balance: nat
+
+
+class CreatedInFutureError(Record):
+    ledger_time: nat64
+
+
+class DuplicateError(Record):
+    duplicate_of: nat
+
+
+class GenericError(Record):
+    error_code: nat
+    message: text
+
+
+# The standard ICRC-1 TransferError. The token only produces BadFee and
+# InsufficientFunds; the other cases are declared so clients decode the full type.
+class TransferError(Variant, total=False):
+    BadFee: "BadFeeError"
+    BadBurn: "BadBurnError"
+    InsufficientFunds: "InsufficientFundsError"
+    TooOld: null
+    CreatedInFuture: "CreatedInFutureError"
+    Duplicate: "DuplicateError"
+    TemporarilyUnavailable: null
+    GenericError: "GenericError"
+
+
+class TransferResult(Variant, total=False):
+    Ok: nat
+    Err: TransferError
 
 
 class MintArgs(Record):
@@ -353,16 +392,20 @@ def icrc1_transfer(args: TransferArgs) -> TransferResult:
         f"Transfer request: {caller} -> {args['to']['owner'].to_str()}, amount: {args['amount']}"
     )
 
+    fee = icrc1_fee()
+    if args.get("fee") is not None and args["fee"] != fee:
+        logger.warning(f"Bad fee: {args['fee']} != {fee}")
+        return TransferResult(Err=TransferError(BadFee=BadFeeError(expected_fee=fee)))
+
     sender_balance = TokenHelper.get_balance(caller, args.get("from_subaccount"))
-    fee = args.get("fee") if args.get("fee") is not None else TOKEN_FEE
     total_deduction = args["amount"] + fee
 
     if sender_balance < total_deduction:
         logger.warning(f"Insufficient balance: {sender_balance} < {total_deduction}")
         return TransferResult(
-            success=False,
-            block_index=None,
-            error=f"Insufficient balance. Have {sender_balance}, need {total_deduction}",
+            Err=TransferError(
+                InsufficientFunds=InsufficientFundsError(balance=sender_balance)
+            )
         )
 
     recipient = args["to"]["owner"].to_str()
@@ -394,7 +437,7 @@ def icrc1_transfer(args: TransferArgs) -> TransferResult:
         f"Transfer successful: {args['amount']} tokens transferred, block_index={block_index}"
     )
 
-    return TransferResult(success=True, block_index=block_index, error=None)
+    return TransferResult(Ok=block_index)
 
 
 @update
