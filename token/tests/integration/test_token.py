@@ -176,7 +176,7 @@ def run_tests():
         f'(record {{ to = record {{ owner = principal "{alice}"; subaccount = null }}; amount = {transfer_amount} : nat; fee = null; memo = null; from_subaccount = null; created_at_time = null }})',
     )
     assert_true(
-        isinstance(result, dict) and result.get("success") == True,
+        isinstance(result, dict) and "Ok" in result,
         "transfer from deployer to alice succeeds",
     )
 
@@ -201,7 +201,7 @@ def run_tests():
         f'(record {{ to = record {{ owner = principal "{bob}"; subaccount = opt {subaccount_blob} }}; amount = 50000000 : nat; fee = null; memo = null; from_subaccount = null; created_at_time = null }})',
     )
     assert_true(
-        isinstance(result, dict) and result.get("success") == True,
+        isinstance(result, dict) and "Ok" in result,
         "transfer to subaccount succeeds",
     )
 
@@ -223,13 +223,33 @@ def run_tests():
         identity="test_charlie",
     )
     assert_true(
-        isinstance(result, dict) and result.get("success") == False,
-        "transfer with insufficient balance fails",
+        isinstance(result, dict) and "InsufficientFunds" in result.get("Err", {}),
+        "transfer with insufficient balance fails with InsufficientFunds",
     )
-    assert_contains(
-        result.get("error", ""),
-        "Insufficient balance",
-        "error message contains 'Insufficient balance'",
+    assert_equals(
+        0,
+        parse_nat(result["Err"]["InsufficientFunds"]["balance"]),
+        "InsufficientFunds reports the sender balance",
+    )
+
+    # ==========================================
+    # Bad Fee Tests
+    # ==========================================
+    print()
+    print("--- Bad Fee Tests ---")
+
+    result = dfx_call(
+        "icrc1_transfer",
+        f'(record {{ to = record {{ owner = principal "{bob}"; subaccount = null }}; amount = 1 : nat; fee = opt (1 : nat); memo = null; from_subaccount = null; created_at_time = null }})',
+    )
+    assert_true(
+        isinstance(result, dict) and "BadFee" in result.get("Err", {}),
+        "transfer with a wrong fee fails with BadFee",
+    )
+    assert_equals(
+        10000,
+        parse_nat(result["Err"]["BadFee"]["expected_fee"]),
+        "BadFee reports the expected fee",
     )
 
     # ==========================================
@@ -268,7 +288,7 @@ def run_tests():
         identity="test_charlie",
     )
     assert_true(
-        isinstance(result, dict) and result.get("success") == True,
+        isinstance(result, dict) and "Ok" in result,
         "charlie can transfer minted tokens",
     )
 

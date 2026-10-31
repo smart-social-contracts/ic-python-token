@@ -43,16 +43,12 @@ class MockStableBTreeMap(metaclass=SubscriptableMeta):
         return self.data.items()
 
 
-class MockRecord:
-    pass
+class MockRecord(dict):
+    """Records are plain dicts in the canister runtime"""
 
 
-class MockVariant:
-    """Mock Variant class for testing"""
-
-    def __init__(self, **kwargs):
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+class MockVariant(dict):
+    """Variants are plain dicts in the canister runtime, e.g. {"Ok": 0}"""
 
     def __init_subclass__(cls, **kwargs):
         # Accept and ignore keyword arguments like total=False
@@ -78,6 +74,8 @@ mock_basilisk.blob = bytes
 mock_basilisk.init = lambda f: f
 mock_basilisk.nat = int
 mock_basilisk.nat8 = int
+mock_basilisk.nat64 = int
+mock_basilisk.null = None
 mock_basilisk.query = lambda f: f
 mock_basilisk.text = str
 mock_basilisk.update = lambda f: f
@@ -473,6 +471,77 @@ def test_mint_unauthorized():
 # ============================================================
 # INDEXER TESTS
 # ============================================================
+
+
+def make_transfer_args(amount, fee=None):
+    recipient = MagicMock(to_str=lambda: "recipient-principal")
+    return {
+        "to": {"owner": recipient, "subaccount": None},
+        "amount": amount,
+        "fee": fee,
+    }
+
+
+def test_transfer_ok_returns_block_index():
+    """A transfer returns Ok = the block index of the logged transaction"""
+    try:
+        from main import TokenConfig, TokenHelper, icrc1_fee, icrc1_transfer
+
+        TokenConfig._instances.pop("next_block_index", None)
+        TokenHelper.set_balance("aaaaa-aa", 1_000_000)
+        TokenHelper.set_balance("recipient-principal", 0)
+
+        result = icrc1_transfer(make_transfer_args(500_000))
+        assert result == {"Ok": 0}, f"Expected Ok = 0, got {result}"
+        assert TokenHelper.get_balance("recipient-principal") == 500_000
+
+        result = icrc1_transfer(make_transfer_args(1, fee=icrc1_fee()))
+        assert result == {"Ok": 1}, f"Expected Ok = 1, got {result}"
+
+        print_success("transfer_ok_returns_block_index tests passed")
+        return True
+    except Exception as e:
+        print_failure("transfer_ok_returns_block_index tests failed", str(e))
+        return False
+
+
+def test_transfer_bad_fee():
+    """A transfer naming a fee other than the token fee fails with BadFee"""
+    try:
+        from main import TokenHelper, icrc1_fee, icrc1_transfer
+
+        TokenHelper.set_balance("aaaaa-aa", 1_000_000)
+
+        result = icrc1_transfer(make_transfer_args(1, fee=icrc1_fee() + 1))
+        expected = {"Err": {"BadFee": {"expected_fee": icrc1_fee()}}}
+        assert result == expected, f"Expected {expected}, got {result}"
+        assert (
+            TokenHelper.get_balance("aaaaa-aa") == 1_000_000
+        ), "Balance must not change"
+
+        print_success("transfer_bad_fee tests passed")
+        return True
+    except Exception as e:
+        print_failure("transfer_bad_fee tests failed", str(e))
+        return False
+
+
+def test_transfer_insufficient_funds():
+    """A transfer the sender cannot cover fails with InsufficientFunds"""
+    try:
+        from main import TokenHelper, icrc1_transfer
+
+        TokenHelper.set_balance("aaaaa-aa", 100)
+
+        result = icrc1_transfer(make_transfer_args(100))
+        expected = {"Err": {"InsufficientFunds": {"balance": 100}}}
+        assert result == expected, f"Expected {expected}, got {result}"
+
+        print_success("transfer_insufficient_funds tests passed")
+        return True
+    except Exception as e:
+        print_failure("transfer_insufficient_funds tests failed", str(e))
+        return False
 
 
 def test_transaction_helper_block_index():
@@ -1013,6 +1082,10 @@ def run_tests():
         test_owner_helper,
         test_mint_authorized,
         test_mint_unauthorized,
+        # Transfer result tests
+        test_transfer_ok_returns_block_index,
+        test_transfer_bad_fee,
+        test_transfer_insufficient_funds,
         # Test mode tests
         test_test_mode_config,
         test_mint_allowed_in_test_mode,

@@ -140,6 +140,15 @@ dfx canister call token_backend icrc1_balance_of '(record {
 })'
 ```
 
+### Transfer Result
+
+`icrc1_transfer` returns the standard ICRC-1 `variant { Ok : nat; Err : TransferError }`:
+`Ok` holds the block index of the transfer, and `Err` is `BadFee` (a `fee` other than
+`icrc1_fee` was given) or `InsufficientFunds` (the sender cannot cover amount plus fee).
+
+> **Breaking change in 0.6.0:** before this version `icrc1_transfer` returned
+> `record { success; block_index; error }`. Callers must read `Ok` / `Err` instead.
+
 ## Mint Tokens
 
 Minting is controlled by the `test` flag during initialization:
