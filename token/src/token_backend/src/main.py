@@ -409,11 +409,13 @@ def icrc1_transfer(args: TransferArgs) -> TransferResult:
         )
 
     recipient = args["to"]["owner"].to_str()
-    recipient_balance = TokenHelper.get_balance(recipient, args["to"].get("subaccount"))
 
     TokenHelper.set_balance(
         caller, sender_balance - total_deduction, args.get("from_subaccount")
     )
+    # Read after the debit: when sender and recipient are the same account,
+    # only the fee must leave it.
+    recipient_balance = TokenHelper.get_balance(recipient, args["to"].get("subaccount"))
     TokenHelper.set_balance(
         recipient, recipient_balance + args["amount"], args["to"].get("subaccount")
     )
@@ -499,7 +501,7 @@ def get_token_info() -> TokenMetadataRecord:
         name=TOKEN_NAME,
         symbol=TOKEN_SYMBOL,
         decimals=TOKEN_DECIMALS,
-        fee=TOKEN_FEE,
+        fee=icrc1_fee(),
         total_supply=TokenHelper.get_total_supply(),
     )
 

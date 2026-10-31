@@ -526,6 +526,28 @@ def test_transfer_bad_fee():
         return False
 
 
+def test_transfer_to_self_only_charges_fee():
+    """A transfer to the sender's own account removes only the fee"""
+    try:
+        from main import TokenHelper, icrc1_fee, icrc1_transfer
+
+        TokenHelper.set_balance("aaaaa-aa", 1_000_000)
+        TokenHelper.set_total_supply(1_000_000)
+        args = make_transfer_args(500_000)
+        args["to"]["owner"] = MagicMock(to_str=lambda: "aaaaa-aa")
+
+        result = icrc1_transfer(args)
+        assert "Ok" in result, f"Expected Ok, got {result}"
+        assert TokenHelper.get_balance("aaaaa-aa") == 1_000_000 - icrc1_fee()
+        assert TokenHelper.get_total_supply() == 1_000_000 - icrc1_fee()
+
+        print_success("transfer_to_self_only_charges_fee tests passed")
+        return True
+    except Exception as e:
+        print_failure("transfer_to_self_only_charges_fee tests failed", str(e))
+        return False
+
+
 def test_transfer_insufficient_funds():
     """A transfer the sender cannot cover fails with InsufficientFunds"""
     try:
@@ -1086,6 +1108,7 @@ def run_tests():
         test_transfer_ok_returns_block_index,
         test_transfer_bad_fee,
         test_transfer_insufficient_funds,
+        test_transfer_to_self_only_charges_fee,
         # Test mode tests
         test_test_mode_config,
         test_mint_allowed_in_test_mode,
